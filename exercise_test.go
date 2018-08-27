@@ -15,7 +15,7 @@ func TestHasPrefix(t *testing.T) {
 	prefix := "main"
 
 	if !strings.HasPrefix(given, prefix) {
-		t.Error("String '%s' does not have prefix '%s'\n", given, prefix)
+		t.Errorf("String '%s' does not have prefix '%s'", given, prefix)
 	}
 }
 
@@ -31,7 +31,7 @@ func TestHasPrefix(t *testing.T) {
 // |------------------------------------------------|
 
 func TestIndex(t *testing.T) {
-	tests := struct {
+	tests := []struct {
 		Value     string
 		Substring string
 		Answer    int
@@ -40,9 +40,37 @@ func TestIndex(t *testing.T) {
 		{"Testing in Go is fun.", "fun", 17},
 		{"The answer is 42.", "is", 11},
 	}
+
+	for _, tt := range tests {
+		got := strings.Index(tt.Value, tt.Substring)
+		if got != tt.Answer {
+			t.Errorf("Expected %d, got %d", tt.Answer, got)
+		}
+	}
 }
 
 // Rewrite the above test for strings.Index using subtests
+
+func TestIndexSubTests(t *testing.T) {
+	tests := []struct {
+		Value     string
+		Substring string
+		Answer    int
+	}{
+		{"Gophers are amazing!", "are", 8},
+		{"Testing in Go is fun.", "fun", 17},
+		{"The answer is 42.", "is", 11},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.Value, func(st *testing.T) {
+			got := strings.Index(tt.Value, tt.Substring)
+			if got != tt.Answer {
+				st.Errorf("Expected %d, got %d", tt.Answer, got)
+			}
+		})
+	}
+}
 
 // Here is a simple test that tests `strings.HasSuffix`.i
 // https://golang.org/pkg/strings/#HasSuffix
